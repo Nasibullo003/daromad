@@ -1,0 +1,8 @@
+daromad_app
+warehouse.db
+backup_*.db
+server.log
+*.log
+.git
+README.md
+warehouse/

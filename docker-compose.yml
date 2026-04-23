@@ -1,0 +1,37 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: daromad_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: daromad
+      POSTGRES_PASSWORD: daromad
+      POSTGRES_DB: daromad
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U daromad"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  daromad:
+    build: .
+    container_name: daromad_app
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      - DATABASE_URL=postgres://daromad:daromad@postgres:5432/daromad?sslmode=disable
+      - TZ=Asia/Dushanbe
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:8080/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  pg_data:

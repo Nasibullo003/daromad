@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="tg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мағоза</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+<div id="toast-container"></div>
+
+<!-- ── Login / Register ──────────────────────────────── -->
+<div id="login-page" class="login-page">
+    <div class="login-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
+    <div class="login-card">
+        <div class="login-logo">
+            <div class="login-logo-icon">🏪</div>
+            <h1>Мағоза</h1>
+            <p>Системаи идоракунии анбор</p>
+        </div>
+        <div class="auth-tabs">
+            <button class="auth-tab active" id="tab-login"    onclick="switchTab('login')">Дохил шудан</button>
+            <button class="auth-tab"         id="tab-register" onclick="switchTab('register')">Бақайдгирӣ</button>
+        </div>
+        <form id="login-form" autocomplete="off">
+            <div class="field-group">
+                <label>Номи корбар</label>
+                <div class="field-wrap">
+                    <input type="text" id="login-username" placeholder="username" autocomplete="username">
+                    <span class="field-icon">👤</span>
+                </div>
+            </div>
+            <div class="field-group">
+                <label>Парол</label>
+                <div class="field-wrap">
+                    <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
+                    <span class="field-icon">🔒</span>
+                </div>
+            </div>
+            <div id="login-error" class="auth-error hidden"></div>
+            <button type="submit" class="login-btn" id="login-btn">
+                <span id="login-label">Дохил шудан →</span>
+                <span id="login-spinner" class="spin hidden">⟳</span>
+            </button>
+            <p class="auth-hint">Аввалин дафъа? <strong onclick="switchTab('register')" style="cursor:pointer;color:#a5b4fc">Бақайдгирӣ</strong></p>
+        </form>
+        <form id="register-form" autocomplete="off" class="hidden">
+            <div class="field-group">
+                <label>Номи корбар</label>
+                <div class="field-wrap">
+                    <input type="text" id="reg-username" placeholder="ҳадди аққал 3 ҳарф" autocomplete="username">
+                    <span class="field-icon">👤</span>
+                </div>
+            </div>
+            <div class="field-group">
+                <label>Парол</label>
+                <div class="field-wrap">
+                    <input type="password" id="reg-password" placeholder="ҳадди аққал 6 ҳарф" autocomplete="new-password">
+                    <span class="field-icon">🔒</span>
+                </div>
+            </div>
+            <div class="field-group">
+                <label>Тасдиқи парол</label>
+                <div class="field-wrap">
+                    <input type="password" id="reg-password2" placeholder="паролро такрор кунед" autocomplete="new-password">
+                    <span class="field-icon">🔒</span>
+                </div>
+            </div>
+            <div id="reg-error" class="auth-error hidden"></div>
+            <button type="submit" class="login-btn" id="reg-btn">
+                <span id="reg-label">Бақайдгирӣ →</span>
+                <span id="reg-spinner" class="spin hidden">⟳</span>
+            </button>
+            <p class="auth-hint">Аккаунт доред? <strong onclick="switchTab('login')" style="cursor:pointer;color:#a5b4fc">Дохил шудан</strong></p>
+        </form>
+    </div>
+</div>
+
+<!-- ── Main App ──────────────────────────────────────── -->
+<div id="app" class="app hidden">
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-text">
+                <span class="brand-name">Мағоза</span>
+                <span class="brand-ver">Сару либос</span>
+            </div>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active" data-section="dashboard">
+                <span class="nav-icon">📊</span><span>Дашборд</span>
+            </a>
+            <a href="#" class="nav-item nav-sale" data-section="sale">
+                <span class="nav-icon">🛒</span><span>Фурӯш</span>
+            </a>
+            <a href="#" class="nav-item" data-section="income">
+                <span class="nav-icon">📥</span><span>Даромади мол</span>
+            </a>
+            <a href="#" class="nav-item" data-section="history">
+                <span class="nav-icon">📋</span><span>Таърих</span>
+            </a>
+            <div class="nav-divider"></div>
+            <a href="#" class="nav-item" data-section="products">
+                <span class="nav-icon">📦</span><span>Маҳсулотҳо</span>
+            </a>
+            <a href="#" class="nav-item" data-section="add-product">
+                <span class="nav-icon">➕</span><span>Маҳсулоти нав</span>
+            </a>
+            <div class="nav-divider"></div>
+            <a href="#" class="nav-item" data-section="profile">
+                <span class="nav-icon">📊</span><span>Профил</span>
+            </a>
+            <a href="#" class="nav-item" data-section="expenses">
+                <span class="nav-icon">💸</span><span>Харочот</span>
+            </a>
+            <a href="#" class="nav-item" data-section="debts">
+                <span class="nav-icon">💳</span><span>Карзҳо</span>
+            </a>
+            <a href="#" class="nav-item" data-section="reports">
+                <span class="nav-icon">📈</span><span>Ҳисобот</span>
+            </a>
+            <a href="#" class="nav-item" data-section="settings">
+                <span class="nav-icon">⚙️</span><span>Танзимот</span>
+            </a>
+            <a href="#" class="nav-item" data-section="admin">
+                <span class="nav-icon">🛠️</span><span>Идора</span>
+            </a>
+        </nav>
+        <div class="sidebar-bottom">
+            <button class="logout-btn" id="logout-btn"><span>🚪</span><span>Баромадан</span></button>
+        </div>
+    </aside>
+
+    <div class="main-wrap">
+        <header class="topbar">
+            <button class="burger" id="burger">☰</button>
+            <h2 class="page-title" id="page-title">Дашборд</h2>
+            <div class="topbar-user">
+                <div class="avatar" id="user-avatar">?</div>
+                <span id="user-name">...</span>
+            </div>
+        </header>
+
+        <main class="main-content">
+
+            <!-- ── Дашборд ────────────────────────────── -->
+            <section id="dashboard" class="section active">
+                <div class="stats-row">
+                    <div class="stat-card card-blue" style="cursor:pointer" onclick="go('products')" title="Маҳсулотҳоро нишон диҳед">
+                        <div class="stat-ico">📦</div>
+                        <div><p class="stat-lbl">Маҳсулотҳо</p><h3 class="stat-val" id="stat-count">0</h3></div>
+                    </div>
+                    <div class="stat-card card-violet" style="cursor:pointer" onclick="showWarehouseDetail()" title="Ҷузъиёт">
+                        <div class="stat-ico">💰</div>
+                        <div><p class="stat-lbl">Арзиши анбор</p><h3 class="stat-val" id="stat-value">0 смн</h3></div>
+                    </div>
+                    <div class="stat-card card-green" style="cursor:pointer" onclick="showTodaySalesDetail()" title="Фурӯши имрӯз">
+                        <div class="stat-ico">🛒</div>
+                        <div><p class="stat-lbl">Фурӯши имрӯз</p><h3 class="stat-val" id="stat-today-out">0 смн</h3></div>
+                    </div>
+                    <div class="stat-card card-orange" style="cursor:pointer" onclick="go('history')" title="Таърихи фурӯш">
+                        <div class="stat-ico">📈</div>
+                        <div><p class="stat-lbl">Умумии фурӯш</p><h3 class="stat-val" id="stat-total-out">0 смн</h3></div>
+                    </div>
+                </div>
+
+                <!-- Profit row -->
+                <div class="profit-row">
+                    <div class="profit-card" style="cursor:pointer" onclick="showProfitDetail('today')">
+                        <div class="profit-label">💹 Фоидаи имрӯз</div>
+                        <div class="profit-val" id="profit-today">0.00 смн</div>
+                        <div class="profit-sub"><span id="profit-today-rev" class="ps-rev">Фурӯш: 0 смн</span> − <span id="profit-today-cost" class="ps-cost">Харид: 0 смн</span></div>
+                    </div>
+                    <div class="profit-card" style="cursor:pointer" onclick="showProfitDetail('month')">
+                        <div class="profit-label">📅 Фоидаи ин моҳ</div>
+                        <div class="profit-val" id="profit-month">0.00 смн</div>
+                        <div class="profit-sub"><span id="profit-month-rev" class="ps-rev">Фурӯш: 0 смн</span> − <span id="profit-month-cost" class="ps-cost">Харид: 0 смн</span></div>
+                    </div>
+                    <div class="profit-card" style="cursor:pointer" onclick="showProfitDetail('total')">
+                        <div class="profit-label">🏆 Умумии фоида</div>
+                        <div class="profit-val" id="profit-total">0.00 смн</div>
+                        <div class="profit-sub"><span id="profit-total-rev" class="ps-rev">Фурӯш: 0 смн</span> − <span id="profit-total-cost" class="ps-cost">Харид: 0 смн</span></div>
+                    </div>
+                    <div class="profit-card exp-dash-card" style="cursor:pointer" onclick="go('expenses')">
+                        <div class="profit-label">💸 Харочоти имрӯз</div>
+                        <div class="profit-val exp-color" id="dash-exp-today">0.00 смн</div>
+                        <div class="profit-sub"><span class="ps-cost" id="dash-exp-month-lbl">Ин моҳ: 0 смн</span></div>
+                    </div>
+                </div>
+
+                <div id="low-stock-section" class="card hidden" style="border-left:4px solid #f59e0b;margin-bottom:1.25rem">
+                    <div class="card-head">
+                        <h3>⚠️ Камбудии мол</h3>
+                        <span class="count-badge" style="background:#f59e0b" id="low-stock-count">0</span>
+                    </div>
+                    <div id="low-stock-list" class="low-stock-grid"></div>
+                </div>
+
+                <div class="card">
+                    <div class="card-head">
+                        <h3>Охирин амалиётҳо</h3>
+                        <button class="btn-link" onclick="go('history')">Ҳама →</button>
+                    </div>
+                    <div class="tbl-wrap">
+                        <table class="tbl">
+                            <thead><tr><th>Намуд</th><th>Код</th><th>Маҳсулот</th><th>Размер</th><th>Ҳаҷм</th><th>Нарх</th><th>Ҷамъ</th><th>Корбар</th><th>Сана</th></tr></thead>
+                            <tbody id="dash-tx-tbody"><tr><td colspan="9" class="empty-cell">Амалиёт нест</td></tr></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── Фурӯш ──────────────────────────────── -->
+            <section id="sale" class="section">
+                <div class="sale-layout">
+                    <div class="sale-search-panel">
+                        <div class="sale-search-box">
+                            <span class="search-ico">🔍</span>
+                            <input type="text" id="sale-search" placeholder="Маҳсулот ё код..." oninput="saleSearch(this.value)">
+                        </div>
+                        <div id="sale-results" class="sale-results"></div>
+                    </div>
+                    <div class="sale-form-panel" id="sale-form-panel">
+                        <div class="sale-placeholder" id="sale-placeholder">
+                            <div class="placeholder-icon">👈</div>
+                            <p>Маҳсулотро ҷустуҷӯ карда интихоб кунед</p>
+                        </div>
+                        <div id="sale-product-view" class="hidden">
+                            <div class="sale-product-header">
+                                <div>
+                                    <span class="product-code-badge" id="sp-code"></span>
+                                    <span class="cat-badge" id="sp-cat"></span>
+                                </div>
+                                <h2 id="sp-name"></h2>
+                                <p id="sp-meta" class="product-meta"></p>
+                                <!-- нархи фурӯши таъйиншуда -->
+                                <div id="sp-price-info" class="sale-price-info hidden">
+                                    <span class="spi-label">🏷️ Нархи фурӯш:</span>
+                                    <span class="spi-price" id="sp-set-price"></span>
+                                </div>
+                            </div>
+                            <div class="size-section">
+                                <p class="size-label">Размерро интихоб кунед:</p>
+                                <div id="sp-sizes" class="size-grid"></div>
+                            </div>
+                            <form id="sale-form" class="hidden">
+                                <div class="sale-selected-info" id="sp-selected-info"></div>
+                                <div class="form-grid">
+                                    <div class="field-group">
+                                        <label>Ҳаҷм *</label>
+                                        <input type="number" id="sale-qty" value="1" min="1" step="1" required>
+                                    </div>
+                                    <div class="field-group">
+                                        <label>Нархи фурӯш (смн) *</label>
+                                        <input type="number" id="sale-price" step="0.01" min="0.01" required>
+                                    </div>
+                                </div>
+                                <div class="field-group">
+                                    <label>Изоҳ</label>
+                                    <input type="text" id="sale-note" placeholder="масалан: ба харидор Зебо">
+                                </div>
+                                <div class="sale-total-bar">
+                                    <span>Ҷамъ:</span>
+                                    <strong id="sale-total-display">0.00 смн</strong>
+                                </div>
+                                <button type="submit" class="btn btn-sale">🛒 Фурӯхтан</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── Даромади мол ───────────────────────── -->
+            <section id="income" class="section">
+                <div class="card form-card">
+                    <div class="card-head tx-head-in"><h3>📥 Даромади мол</h3></div>
+                    <form id="income-form">
+
+                        <!-- Қадами 1 -->
+                        <div class="income-step-header">
+                            <span class="step-num">1</span>
+                            <span>Маҳсулотро интихоб кунед</span>
+                        </div>
+                        <div class="field-group">
+                            <label>Ҷустуҷӯи маҳсулот *</label>
+                            <div class="search-select-wrap">
+                                <input type="text" id="income-search" placeholder="Ном ё код..." oninput="incomeSearch(this.value)" autocomplete="off">
+                                <div id="income-dropdown" class="search-dropdown hidden"></div>
+                            </div>
+                            <input type="hidden" id="income-product-id">
+                        </div>
+                        <div id="income-selected-box" class="income-prod-card hidden">
+                            <div style="display:flex;justify-content:space-between;align-items:center">
+                                <div>
+                                    <div class="ipc-name" id="income-prod-name"></div>
+                                    <div class="ipc-meta"><span id="income-prod-code"></span> · <span id="income-prod-cat"></span></div>
+                                </div>
+                                <button type="button" class="btn btn-outline" style="font-size:12px;padding:.3rem .7rem" onclick="resetIncomeForm()">✕ Иваз</button>
+                            </div>
+                        </div>
+
+                        <!-- Қадами 2 -->
+                        <div id="income-size-grid-section" class="hidden">
+                            <div class="income-step-header">
+                                <span class="step-num">2</span>
+                                <span>Размерҳо ва ҳаҷми даромад</span>
+                            </div>
+                            <div class="ap-sizes-label">
+                                <span>📐 Ҳар размер чанд дона даромад?</span>
+                                <small>0 = даромад нест</small>
+                            </div>
+                            <div id="income-size-grid" class="ap-sizes-input-grid"></div>
+                        </div>
+
+                        <!-- Қадами 3 -->
+                        <div id="income-prices-section" class="hidden">
+                            <div class="income-step-header">
+                                <span class="step-num">3</span>
+                                <span>Нархҳо ва изоҳ</span>
+                            </div>
+                            <div class="form-grid">
+                                <div class="field-group">
+                                    <label>💰 Нархи харид (смн) *</label>
+                                    <input type="number" id="income-price" placeholder="0.00" step="0.01" min="0.01">
+                                </div>
+                                <div class="field-group">
+                                    <label>🏷️ Нархи фурӯш (смн)</label>
+                                    <input type="number" id="income-sale-price" placeholder="0.00" step="0.01" min="0.01">
+                                    <span class="stock-hint">Нархи нави фурӯш — агар иваз шуда бошад</span>
+                                </div>
+                                <div class="field-group">
+                                    <label>Ҷамъи умумӣ</label>
+                                    <div class="total-display" id="income-total">0.00 смн</div>
+                                </div>
+                            </div>
+                            <div class="field-group">
+                                <label>Изоҳ</label>
+                                <input type="text" id="income-note" placeholder="аз кадом поставщик...">
+                            </div>
+                            <div class="form-foot" style="display:flex;gap:.75rem;align-items:center">
+                                <button type="button" class="btn btn-outline" onclick="resetIncomeForm()">↺ Аз нав</button>
+                                <button type="submit" class="btn btn-income" id="income-btn">📥 Даромад сабт кардан</button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+
+                <div class="card" style="margin-top:1.25rem">
+                    <div class="card-head"><h3>Охирин даромадҳо</h3></div>
+                    <div class="tbl-wrap">
+                        <table class="tbl">
+                            <thead><tr><th>Код</th><th>Маҳсулот</th><th>Размер</th><th>Ҳаҷм</th><th>Нарх</th><th>Ҷамъ</th><th>Изоҳ</th><th>Сана</th></tr></thead>
+                            <tbody id="income-tbody"><tr><td colspan="8" class="empty-cell">Даромад нест</td></tr></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── Таърих ─────────────────────────────── -->
+            <section id="history" class="section">
+                <div class="card">
+                    <div class="card-head">
+                        <h3>📋 Таърихи амалиётҳо</h3>
+                        <div class="filter-tabs">
+                            <button class="filter-tab active" onclick="filterHistory('all',this)">Ҳама</button>
+                            <button class="filter-tab" onclick="filterHistory('in',this)">📥 Даромад</button>
+                            <button class="filter-tab" onclick="filterHistory('out',this)">🛒 Фурӯш</button>
+                        </div>
+                    </div>
+                    <div class="tbl-wrap">
+                        <table class="tbl">
+                            <thead><tr><th>Намуд</th><th>Код</th><th>Маҳсулот</th><th>Размер</th><th>Ҳаҷм</th><th>Нарх</th><th>Ҷамъ</th><th>Изоҳ</th><th>Корбар</th><th>Сана</th></tr></thead>
+                            <tbody id="history-tbody"><tr><td colspan="10" class="empty-cell">Амалиёт нест</td></tr></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── Маҳсулотҳо ─────────────────────────── -->
+            <section id="products" class="section">
+                <div class="products-toolbar">
+                    <div class="search-box">
+                        <span class="search-ico">🔍</span>
+                        <input type="text" id="prod-search" placeholder="Ҷустуҷӯ..." oninput="renderProducts()">
+                    </div>
+                    <div class="filter-tabs">
+                        <button class="filter-tab active" onclick="filterProducts('all',this)">Ҳама</button>
+                        <button class="filter-tab" onclick="filterProducts('shoes',this)">👟 Пойафзол</button>
+                        <button class="filter-tab" onclick="filterProducts('clothing',this)">👕 Либос</button>
+                        <button class="filter-tab" onclick="filterProducts('other',this)">📦 Дигар</button>
+                    </div>
+                </div>
+                <div id="products-grid" class="products-grid">
+                    <p class="empty-cell" style="text-align:center;padding:3rem">Маҳсулот нест</p>
+                </div>
+            </section>
+
+            <!-- ── Маҳсулоти нав ──────────────────────── -->
+            <section id="add-product" class="section">
+                <div class="card form-card">
+                    <div class="card-head"><h3>➕ Маҳсулоти нав илова кардан</h3></div>
+                    <form id="add-product-form">
+                        <div class="form-grid">
+                            <div class="field-group">
+                                <label>Категория *</label>
+                                <select id="ap-category" required onchange="onCategoryChange()">
+                                    <option value="">— Интихоб кунед —</option>
+                                    <option value="shoes">👟 Пойафзол</option>
+                                    <option value="clothing">👕 Либос</option>
+                                    <option value="other">📦 Дигар</option>
+                                </select>
+                            </div>
+                            <div class="field-group">
+                                <label>Коди маҳсулот</label>
+                                <div style="display:flex;gap:.5rem">
+                                    <input type="text" id="ap-code" placeholder="масалан: NK-001" style="flex:1">
+                                    <button type="button" class="btn btn-outline" onclick="genCode()" title="Автоматӣ">🔄</button>
+                                </div>
+                            </div>
+                            <div class="field-group">
+                                <label>Номи маҳсулот *</label>
+                                <input type="text" id="ap-name" placeholder="масалан: Nike Air Max" required list="product-names-list" autocomplete="off">
+                            </div>
+                            <div class="field-group">
+                                <label>Бренд</label>
+                                <input type="text" id="ap-brand" placeholder="Nike, Adidas, Zara...">
+                            </div>
+                            <div class="field-group">
+                                <label>Ранг</label>
+                                <input type="text" id="ap-color" placeholder="Сиёҳ, Сафед, Қирмизӣ...">
+                            </div>
+                            <div class="field-group">
+                                <label>Нархи фурӯш (смн) *</label>
+                                <input type="number" id="ap-price" placeholder="0.00" step="0.01" min="0.01" required>
+                            </div>
+                        </div>
+                        <div id="ap-sizes-section" class="ap-sizes-section hidden">
+                            <div class="ap-sizes-label">
+                                <span>📐 Размерҳо ва ҳаҷми ибтидоӣ</span>
+                                <small>Ҳаҷми 0 = дар анбор нест</small>
+                            </div>
+                            <div id="ap-sizes-grid" class="ap-sizes-input-grid"></div>
+                        </div>
+                        <div class="form-foot">
+                            <button type="submit" class="btn btn-primary" id="ap-submit">➕ Илова кардан</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- ── Профил ─────────────────────────────── -->
+            <section id="profile" class="section">
+                <div class="profile-store-card card" style="margin-bottom:1.25rem">
+                    <div class="profile-store-inner">
+                        <div class="profile-store-logo" id="profile-store-logo">М</div>
+                        <div>
+                            <h2 id="profile-store-name" style="font-size:1.4rem;font-weight:800">Мағоза</h2>
+                            <p style="color:var(--text2);font-size:13px" id="profile-store-sub">Сару либос ва пойафзол</p>
+                        </div>
+                        <button class="btn btn-outline" style="margin-left:auto" onclick="go('settings')">✏️ Иваз кардан</button>
+                    </div>
+                </div>
+                <div class="stats-row" style="margin-bottom:1.25rem">
+                    <div class="stat-card card-green">
+                        <div class="stat-ico">📥</div>
+                        <div><p class="stat-lbl">Даромади ин моҳ</p><h3 class="stat-val" id="prof-month-in">0 смн</h3></div>
+                    </div>
+                    <div class="stat-card card-orange">
+                        <div class="stat-ico">🛒</div>
+                        <div><p class="stat-lbl">Фурӯши ин моҳ</p><h3 class="stat-val" id="prof-month-out">0 смн</h3></div>
+                    </div>
+                    <div class="stat-card card-blue">
+                        <div class="stat-ico">📋</div>
+                        <div><p class="stat-lbl">Амалиётҳои ин моҳ</p><h3 class="stat-val" id="prof-month-tx">0</h3></div>
+                    </div>
+                    <div class="stat-card card-violet">
+                        <div class="stat-ico">💳</div>
+                        <div><p class="stat-lbl">Боқимондаи карз</p><h3 class="stat-val" id="prof-debt-rem">0 смн</h3></div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-head">
+                        <h3>💳 Карзҳои фаъол</h3>
+                        <button class="btn-link" onclick="go('debts')">Ҳама →</button>
+                    </div>
+                    <div id="profile-debts-list" class="profile-debts-list">
+                        <p class="empty-cell">Карз нест</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── Харочот ─────────────────────────────── -->
+            <section id="expenses" class="section">
+                <div class="exp-summary-row">
+                    <div class="exp-sum-card">
+                        <div class="exp-sum-lbl">💸 Харочоти имрӯз</div>
+                        <div class="exp-sum-val" id="exp-today-total">0.00 смн</div>
+                    </div>
+                    <div class="exp-sum-card">
+                        <div class="exp-sum-lbl">📅 Харочоти ин моҳ</div>
+                        <div class="exp-sum-val" id="exp-month-total">0.00 смн</div>
+                    </div>
+                </div>
+                <div class="tx-layout">
+                    <div class="card form-card">
+                        <div class="card-head" style="background:rgba(251,191,36,.08);border-radius:8px;padding:.5rem .75rem;margin:-.25rem -.25rem .75rem">
+                            <h3>💸 Харочоти нав</h3>
+                        </div>
+                        <form id="expense-form">
+                            <div class="field-group">
+                                <label>Маблағ (смн) *</label>
+                                <input type="number" id="exp-amount" placeholder="0.00" step="0.01" min="0.01" required>
+                            </div>
+                            <div class="field-group">
+                                <label>Навъ</label>
+                                <select id="exp-category">
+                                    <option value="rent">🏠 Иҷора</option>
+                                    <option value="salary">👤 Маош</option>
+                                    <option value="transport">🚚 Нақлиёт</option>
+                                    <option value="utilities">💡 Коммуналӣ</option>
+                                    <option value="food">🍽️ Хӯрок</option>
+                                    <option value="other" selected>📌 Дигар</option>
+                                </select>
+                            </div>
+                            <div class="field-group">
+                                <label>Изоҳ</label>
+                                <input type="text" id="exp-note" placeholder="барои чӣ...">
+                            </div>
+                            <div class="form-foot">
+                                <button type="submit" class="btn btn-warning" id="exp-btn">💸 Харочот сабт кардан</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card">
+                        <div class="card-head">
+                            <h3>Рӯйхати харочот</h3>
+                            <div style="display:flex;gap:.5rem;align-items:center">
+                                <div class="filter-tabs" style="margin:0">
+                                    <button class="filter-tab active" onclick="filterExpenses('all',this)">Ҳама</button>
+                                    <button class="filter-tab" onclick="filterExpenses('today',this)">Имрӯз</button>
+                                    <button class="filter-tab" onclick="filterExpenses('month',this)">Ин моҳ</button>
+                                </div>
+                                <span class="count-badge" style="background:var(--yellow)" id="exp-count">0</span>
+                            </div>
+                        </div>
+                        <div id="expenses-list" class="expenses-list">
+                            <p class="empty-cell">Харочот нест</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── Карзҳо ─────────────────────────────── -->
+            <section id="debts" class="section">
+                <div class="tx-layout">
+                    <div class="card form-card">
+                        <div class="card-head" style="background:rgba(239,68,68,.08);border-radius:8px;padding:.5rem .75rem;margin:-.25rem -.25rem .75rem">
+                            <h3>💳 Карзи нав</h3>
+                        </div>
+                        <form id="debt-form">
+                            <div class="field-group">
+                                <label>Номи харидор *</label>
+                                <input type="text" id="debt-customer" placeholder="масалан: Зубайда" required>
+                            </div>
+                            <div class="field-group">
+                                <label>📞 Рақами телефон</label>
+                                <input type="tel" id="debt-phone" placeholder="+992 __ ___ ____">
+                            </div>
+                            <div class="field-group">
+                                <label>Маблағ (смн) *</label>
+                                <input type="number" id="debt-amount" placeholder="0.00" step="0.01" min="0.01" required>
+                            </div>
+                            <div class="field-group">
+                                <label>Изоҳ</label>
+                                <input type="text" id="debt-note" placeholder="чӣ харидааст...">
+                            </div>
+                            <div class="form-foot">
+                                <button type="submit" class="btn btn-danger" id="debt-btn">💳 Карз сабт кардан</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card">
+                        <div class="card-head">
+                            <h3>Рӯйхати карзҳо</h3>
+                            <span class="count-badge" style="background:var(--red)" id="debts-count">0</span>
+                        </div>
+                        <div id="debts-list" class="debts-list">
+                            <p class="empty-cell">Карз нест</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── Танзимот ───────────────────────────── -->
+            <section id="settings" class="section">
+                <div class="card form-card">
+                    <div class="card-head"><h3>⚙️ Танзимоти мағоза</h3></div>
+                    <form id="settings-form">
+                        <div class="field-group">
+                            <label>Номи мағоза</label>
+                            <input type="text" id="set-store-name" placeholder="Номи мағозаатонро нависед">
+                        </div>
+                        <div class="field-group">
+                            <label>Тавсиф (зер аз ном)</label>
+                            <input type="text" id="set-store-sub" placeholder="масалан: Сару либос ва пойафзол">
+                        </div>
+                        <div class="form-foot">
+                            <button type="submit" class="btn btn-primary">💾 Сабт кардан</button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- ── Ҳисобот ────────────────────────────── -->
+            <section id="reports" class="section">
+                <div id="reports-summary" class="stats-row" style="margin-bottom:1.25rem">
+                    <div class="stat-card card-green">
+                        <div class="stat-ico">📥</div>
+                        <div><p class="stat-lbl">Умумӣ даромад</p><h3 class="stat-val" id="rep-total-in">0 смн</h3></div>
+                    </div>
+                    <div class="stat-card card-orange">
+                        <div class="stat-ico">🛒</div>
+                        <div><p class="stat-lbl">Умумӣ фурӯш</p><h3 class="stat-val" id="rep-total-out">0 смн</h3></div>
+                    </div>
+                    <div class="stat-card card-blue">
+                        <div class="stat-ico">📥</div>
+                        <div><p class="stat-lbl">Имрӯз даромад</p><h3 class="stat-val" id="rep-today-in">0 смн</h3></div>
+                    </div>
+                    <div class="stat-card card-violet">
+                        <div class="stat-ico">🛒</div>
+                        <div><p class="stat-lbl">Имрӯз фурӯш</p><h3 class="stat-val" id="rep-today-out">0 смн</h3></div>
+                    </div>
+                </div>
+                <div class="charts-grid">
+                    <div class="card"><div class="card-head"><h3>📊 Фурӯш аз рӯи категория (дона)</h3></div><div class="chart-box"><canvas id="catChart"></canvas></div></div>
+                    <div class="card"><div class="card-head"><h3>🏆 Беҳтарин маҳсулотҳо (смн)</h3></div><div class="chart-box"><canvas id="topChart"></canvas></div></div>
+                    <div class="card"><div class="card-head"><h3>💰 Арзиши анбор аз рӯи категория</h3></div><div class="chart-box"><canvas id="valueChart"></canvas></div></div>
+                    <div class="card"><div class="card-head"><h3>📈 Даромад ва Фурӯш (смн)</h3></div><div class="chart-box"><canvas id="txChart"></canvas></div></div>
+                </div>
+            </section>
+
+            <!-- ── Идора (танҳо Admin) ────────────────── -->
+            <section id="admin" class="section">
+
+                <!-- System stats + actions -->
+                <div class="admin-grid" style="margin-bottom:1.25rem">
+                    <div class="card admin-tile">
+                        <div class="tile-ico blue-ico">📊</div>
+                        <h4>Маълумоти система</h4>
+                        <div id="system-stats" class="sys-info"></div>
+                    </div>
+                    <div class="card admin-tile">
+                        <div class="tile-ico blue-ico">💾</div>
+                        <h4>Нусхабардорӣ</h4>
+                        <p>Базаи маълумотро захира кунед</p>
+                        <button type="button" class="btn btn-primary" id="backup-btn">💾 Нусхабардорӣ</button>
+                    </div>
+                    <div class="card admin-tile">
+                        <div class="tile-ico green-ico">📥</div>
+                        <h4>Содирот CSV</h4>
+                        <p>Маҳсулотҳоро ба CSV баровардан</p>
+                        <button type="button" class="btn btn-success" id="export-csv-btn">📥 Боргирӣ CSV</button>
+                    </div>
+                </div>
+
+                <!-- Users management -->
+                <div class="card" style="margin-bottom:1.25rem">
+                    <div class="card-head">
+                        <h3>👥 Корбарон ва нақшҳо</h3>
+                        <span id="users-count-badge" class="count-badge">0</span>
+                    </div>
+                    <div class="tbl-wrap">
+                        <table class="tbl">
+                            <thead><tr><th>#</th><th>Номи корбар</th><th>Нақш</th><th>Санаи бақайдгирӣ</th><th></th></tr></thead>
+                            <tbody id="users-tbody"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Activity log -->
+                <div class="card">
+                    <div class="card-head">
+                        <h3>📋 Журнали фаъолият</h3>
+                        <div class="filter-tabs" style="margin:0">
+                            <button class="filter-tab active" onclick="filterActivity('all',this)">Ҳама</button>
+                            <button class="filter-tab" onclick="filterActivity('in',this)">📥 Даромад</button>
+                            <button class="filter-tab" onclick="filterActivity('out',this)">🛒 Фурӯш</button>
+                            <button class="filter-tab" onclick="filterActivity('expense',this)">💸 Харочот</button>
+                            <button class="filter-tab" onclick="filterActivity('debt_pay',this)">💳 Карз</button>
+                        </div>
+                    </div>
+                    <div class="tbl-wrap">
+                        <table class="tbl">
+                            <thead><tr><th>Намуд</th><th>Корбар</th><th>Тафсилот</th><th>Маблағ</th><th>Сана</th></tr></thead>
+                            <tbody id="activity-tbody"><tr><td colspan="5" class="empty-cell">Амалиёт нест</td></tr></tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </section>
+
+        </main>
+    </div>
+</div>
+
+<!-- ── Edit Product Modal ────────────────────────────── -->
+<div id="product-modal" class="overlay hidden">
+    <div class="modal-box modal-wide">
+        <div class="modal-head">
+            <h3>✏️ Маҳсулотро таҳрир кардан</h3>
+            <button class="close-btn" id="modal-close">✕</button>
+        </div>
+        <form id="edit-product-form">
+            <input type="hidden" id="ep-id">
+            <div class="form-grid">
+                <div class="field-group">
+                    <label>Категория *</label>
+                    <select id="ep-category" required>
+                        <option value="shoes">👟 Пойафзол</option>
+                        <option value="clothing">👕 Либос</option>
+                        <option value="other">📦 Дигар</option>
+                    </select>
+                </div>
+                <div class="field-group">
+                    <label>Код *</label>
+                    <input type="text" id="ep-code" required>
+                </div>
+                <div class="field-group">
+                    <label>Ном *</label>
+                    <input type="text" id="ep-name" required>
+                </div>
+                <div class="field-group">
+                    <label>Бренд</label>
+                    <input type="text" id="ep-brand">
+                </div>
+                <div class="field-group">
+                    <label>Ранг</label>
+                    <input type="text" id="ep-color">
+                </div>
+                <div class="field-group">
+                    <label>Нарх (смн) *</label>
+                    <input type="number" id="ep-price" step="0.01" min="0.01" required>
+                </div>
+            </div>
+            <div class="ap-sizes-label" style="margin-top:1rem">
+                <span>📐 Размерҳо ва ҳаҷм</span>
+                <small>Мустақиман таҳрир кардан мумкин</small>
+            </div>
+            <div id="ep-sizes-grid" class="ap-sizes-input-grid"></div>
+            <div class="modal-foot">
+                <button type="submit" class="btn btn-primary">💾 Сабт кардан</button>
+                <button type="button" class="btn btn-danger" id="ep-delete-btn">🗑️ Нест кардан</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ── Pay Debt Modal ────────────────────────────────── -->
+<div id="pay-modal" class="overlay hidden">
+    <div class="modal-box">
+        <div class="modal-head">
+            <h3>💳 Пардохти карз</h3>
+            <button class="close-btn" id="pay-modal-close">✕</button>
+        </div>
+        <div id="pay-debt-info" style="padding:.6rem 1rem;background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.25);border-radius:8px;margin-bottom:1rem;font-size:13px;color:#f87171"></div>
+        <form id="pay-form">
+            <input type="hidden" id="pay-debt-id">
+            <div class="field-group">
+                <label>Пардохт (смн) *</label>
+                <input type="number" id="pay-amount" placeholder="0.00" step="0.01" min="0.01" required>
+            </div>
+            <div class="field-group">
+                <label>Изоҳ</label>
+                <input type="text" id="pay-note" placeholder="масалан: нақд оварда шуд">
+            </div>
+            <div class="modal-foot">
+                <button type="submit" class="btn btn-success">✅ Пардохт тасдиқ</button>
+                <button type="button" class="btn btn-outline" id="pay-cancel-btn">Бекор</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- ── Detail Modal (дашборд) ────────────────────────── -->
+<div id="detail-modal" class="overlay hidden">
+    <div class="modal-box modal-wide">
+        <div class="modal-head">
+            <h3 id="detail-modal-title">Маълумот</h3>
+            <button class="close-btn" onclick="closeDetailModal()">✕</button>
+        </div>
+        <div id="detail-modal-body" style="max-height:70vh;overflow-y:auto"></div>
+    </div>
+</div>
+
+<!-- ── Product Names Datalist ─────────────────────────── -->
+<datalist id="product-names-list">
+  <option value="Кроссовка"><option value="Туфлӣ мардона"><option value="Туфлӣ занона">
+  <option value="Ботинка"><option value="Ботинка зимистона"><option value="Сандал мардона">
+  <option value="Сандал занона"><option value="Сандал кӯдакона"><option value="Тапочка хонагӣ">
+  <option value="Сапог занона"><option value="Сапог резинагӣ"><option value="Мокасин">
+  <option value="Слипер"><option value="Кроссовка варзишӣ"><option value="Кроссовка кӯдакона">
+  <option value="Туфлӣ кӯдакона"><option value="Кӯйлак мардона"><option value="Футболка мардона">
+  <option value="Шим мардона"><option value="Ҷинс мардона"><option value="Куртка мардона">
+  <option value="Пальто мардона"><option value="Костюм мардона"><option value="Пиджак мардона">
+  <option value="Жилет мардона"><option value="Шорт мардона"><option value="Толстовка мардона">
+  <option value="Худи мардона"><option value="Свитер мардона"><option value="Кофта мардона">
+  <option value="Трико мардона"><option value="Костюми варзишӣ мардона">
+  <option value="Кӯйлак занона"><option value="Футболка занона"><option value="Шим занона">
+  <option value="Ҷинс занона"><option value="Куртка занона"><option value="Пальто занона">
+  <option value="Юбка"><option value="Блуза занона"><option value="Туника занона">
+  <option value="Сарафан"><option value="Кофта занона"><option value="Свитер занона">
+  <option value="Толстовка занона"><option value="Шорт занона">
+  <option value="Костюми варзишӣ занона"><option value="Либоси хонагӣ занона">
+  <option value="Костюми кӯдакона"><option value="Кӯйлак кӯдакона"><option value="Футболка кӯдакона">
+  <option value="Шим кӯдакона"><option value="Ҷинс кӯдакона"><option value="Куртка кӯдакона">
+  <option value="Пальто кӯдакона"><option value="Толстовка кӯдакона"><option value="Шорт кӯдакона">
+</datalist>
+
+<script src="/static/script.js"></script>
+</body>
+</html>
